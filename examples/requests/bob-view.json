@@ -1,0 +1,9 @@
+{
+  "principal": "Platform::Employee::\"alice\"",
+  "action": "Platform::Action::\"view\"",
+  "resource": "Platform::Chunk::\"q3-plan#1\"",
+  "context": {
+    "tenant": "custco"
+  }
+}
+

@@ -1,0 +1,19 @@
+{
+  "principal": "Platform::Customer::\"kate\"",
+  "action": "Platform::Action::\"ask\"",
+  "authorized_resources": [
+    {
+      "id": "q3-plan#1",
+      "tenant": "custco",
+      "classification": "internal",
+      "customer_readers_team": "custco-readers"
+    }
+  ],
+  "filter_conditions": {
+    "tenant": "custco",
+    "customer_readers_team": "custco-readers",
+    "classification_not": "confidential"
+  },
+  "description": "Kate (customer) can access chunks in custco tenant that are shared with custco-readers team and are not confidential"
+}
+

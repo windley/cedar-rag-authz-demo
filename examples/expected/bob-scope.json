@@ -1,0 +1,24 @@
+{
+  "principal": "Platform::Employee::\"alice\"",
+  "action": "Platform::Action::\"view\"",
+  "authorized_resources": [
+    {
+      "id": "q3-plan#1",
+      "tenant": "custco",
+      "classification": "internal",
+      "employee_readers_team": "custco-employees"
+    },
+    {
+      "id": "hr-note#1",
+      "tenant": "custco",
+      "classification": "confidential",
+      "employee_readers_team": "custco-employees"
+    }
+  ],
+  "filter_conditions": {
+    "tenant": "custco",
+    "employee_readers_team": "custco-employees"
+  },
+  "description": "Alice (employee) can access all chunks in custco tenant that are shared with custco-employees team, including confidential ones"
+}
+

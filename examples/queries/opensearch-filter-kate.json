@@ -1,0 +1,70 @@
+{
+  "filter": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "tenant_id": "custco"
+          }
+        },
+        {
+          "exists": {
+            "field": "customer_readers_team_id"
+          }
+        },
+        {
+          "term": {
+            "customer_readers_team_id": "custco-readers"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "classification": "confidential"
+          }
+        }
+      ]
+    }
+  },
+  "query_example": {
+    "size": 10,
+    "query": {
+      "bool": {
+        "filter": {
+          "bool": {
+            "must": [
+              {
+                "term": {
+                  "tenant_id": "custco"
+                }
+              },
+              {
+                "exists": {
+                  "field": "customer_readers_team_id"
+                }
+              },
+              {
+                "term": {
+                  "customer_readers_team_id": "custco-readers"
+                }
+              }
+            ],
+            "must_not": [
+              {
+                "term": {
+                  "classification": "confidential"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "compiled_from": "out/residual-kate.json",
+    "compiled_at": "2024-01-01T00:00:00.000Z"
+  }
+}
+
