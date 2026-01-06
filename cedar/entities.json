@@ -1,0 +1,77 @@
+[
+    {"uid": {"__entity": "Platform::Tenant", "id": "custco"}},
+    {"uid": {"__entity": "Platform::Tenant", "id": "otherco"}},
+  
+    {"uid": {"__entity": "Platform::Team", "id": "custco-readers"},
+     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "custco"}}},
+    {"uid": {"__entity": "Platform::Team", "id": "custco-employees"},
+     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "custco"}}},
+    {"uid": {"__entity": "Platform::Team", "id": "otherco-readers"},
+     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "otherco"}}},
+  
+    {"uid": {"__entity": "Platform::Customer", "id": "kate"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "teams": [
+         {"__entity": "Platform::Team", "id": "custco-readers"}
+       ]
+     }},
+  
+    {"uid": {"__entity": "Platform::Customer", "id": "jack"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "teams": [
+         {"__entity": "Platform::Team", "id": "custco-readers"}
+       ]
+     }},
+  
+    {"uid": {"__entity": "Platform::Employee", "id": "alice"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "teams": [
+         {"__entity": "Platform::Team", "id": "custco-employees"}
+       ]
+     }},
+  
+    {"uid": {"__entity": "Platform::Customer", "id": "mallory"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "otherco"},
+       "teams": [
+         {"__entity": "Platform::Team", "id": "otherco-readers"}
+       ]
+     }},
+  
+    {"uid": {"__entity": "Platform::Document", "id": "q3-plan"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"__entity": "Platform::Team", "id": "custco-readers"},
+       "classification": "internal"
+     }},
+  
+    {"uid": {"__entity": "Platform::Document", "id": "hr-note"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": null,
+       "classification": "confidential"
+     }},
+  
+    {"uid": {"__entity": "Platform::Chunk", "id": "q3-plan#1"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "doc": {"__entity": "Platform::Document", "id": "q3-plan"},
+       "classification": "internal",
+       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"__entity": "Platform::Team", "id": "custco-readers"}
+     }},
+  
+    {"uid": {"__entity": "Platform::Chunk", "id": "hr-note#1"},
+     "attrs": {
+       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "doc": {"__entity": "Platform::Document", "id": "hr-note"},
+       "classification": "confidential",
+       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": null
+     }}
+  ]

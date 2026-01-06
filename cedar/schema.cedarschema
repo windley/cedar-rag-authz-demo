@@ -1,0 +1,52 @@
+namespace Platform {
+  entity Tenant;
+
+  entity Team {
+    tenant: Tenant,
+  };
+
+  // A person is either an Employee or a Customer.
+  entity Employee {
+    tenant: Tenant,
+    teams: Set<Team>,
+  };
+
+  entity Customer {
+    tenant: Tenant,
+    teams: Set<Team>,
+  };
+
+  // Documents belong to a tenant and are shared via reader teams.
+  entity Document {
+    tenant: Tenant,
+
+    // Reader teams may be null when a document is not shared with that category.
+    employee_readers_team: Team?,
+    customer_readers_team: Team?,
+
+    // Simple sensitivity signal for the demo.
+    classification: String,
+  };
+
+  // A chunk is the unit stored in the vector index.
+  // It inherits tenant/sensitivity from the parent document.
+  entity Chunk {
+    tenant: Tenant,
+    doc: Document,
+    classification: String,
+
+    // Flattened sharing attributes for easier pushdown filtering.
+    employee_readers_team: Team?,
+    customer_readers_team: Team?,
+  };
+
+  // Actions used by the demo.
+  entity Action {
+    // RAG retrieval / question answering.
+    // Think: "use this chunk as context".
+    ask: Action,
+
+    // Traditional view action (kept for clarity in examples).
+    view: Action,
+  };
+}
