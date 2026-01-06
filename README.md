@@ -52,6 +52,7 @@ A simplified flow:
 - `src/compile/` — residual → datastore filter translation
 - `src/ingest/` — embedding and OpenSearch ingest
 - `src/retrieve/` — filtered vector queries and context assembly
+- `src/lib/` — shared utilities for Cedar and OpenSearch
 - `examples/` — sample requests, residuals, and queries
 - `infra/` — optional AWS OpenSearch Serverless setup
 - `ai/` — Cursor prompts and AI-assisted workflows
@@ -64,6 +65,55 @@ A simplified flow:
 - npm or pnpm
 - Cedar CLI or JS evaluator available locally
 - Optional: AWS account for OpenSearch Serverless
+
+---
+
+## Quick Start
+
+Get up and running in minutes:
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone https://github.com/windley/cedar-rag-authz-demo.git
+   cd cedar-rag-authz-demo
+   npm install
+   ```
+
+2. **Review the policy model:**
+   ```bash
+   # Inspect the Cedar schema and policies
+   cat cedar/schema.cedarschema
+   ls cedar/policies/
+   ```
+
+3. **Run a partial evaluation example:**
+   ```bash
+   # Generate a residual policy for customer "kate"
+   node src/tpe/partial-eval.js \
+     --principal 'Platform::Customer::"kate"' \
+     --action 'Platform::Action::"ask"' \
+     --resource-type Platform::Chunk \
+     --out out/residual-kate.json
+   ```
+
+4. **Compile the residual to a filter:**
+   ```bash
+   # Translate residual into OpenSearch filter
+   node src/compile/residual-to-filter.js \
+     --residual out/residual-kate.json \
+     --out examples/queries/opensearch-filter-kate.json
+   ```
+
+5. **Verify expected access:**
+   ```bash
+   # Check example requests and expected outcomes
+   cat examples/requests/kate-view.json
+   cat examples/expected/kate-scope.json
+   ```
+
+This demonstrates the core pattern: Cedar produces a residual describing authorized resources, which is compiled into a vector database filter that enforces access *before* retrieval.
+
+For detailed explanations, see the steps below.
 
 ---
 
@@ -93,6 +143,7 @@ node src/tpe/partial-eval.js \
   --context examples/requests/context-tenant-a.json \
   --resource-type Chunk \
   --out out/residual-kate.json
+```
 
 This runs Cedar with:
 - a known principal and action
