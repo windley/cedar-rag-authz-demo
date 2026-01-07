@@ -1,4 +1,5 @@
 {
+  "_comment": "Example authorization request for full evaluation (not used for TPE). For TPE, we only need principal, action, and resource-type, not a specific resource ID.",
   "principal": "Platform::Employee::\"alice\"",
   "action": "Platform::Action::\"view\"",
   "resource": "Platform::Chunk::\"q3-plan#1\"",

@@ -7,12 +7,30 @@ This repository demonstrates a concrete pattern for building **authorization-sco
 3. The application **translates that residual into retrieval constraints** (a metadata filter).
 4. Vector search runs **with those constraints applied**, so only authorized chunks can become LLM context.
 
-This is not “policy in the prompt.”  
+This is not "policy in the prompt."  
 Authorization is enforced *before* any sensitive context is assembled.
 
 ---
 
-## What this repo is (and isn’t)
+## System Architecture
+
+![Authorization-Scoped RAG Architecture](docs/RAG.png)
+
+In a retrieval-augmented generation (RAG) system, the application enriches a user's prompt with additional context retrieved from a vector database—documents, passages, or chunks that help the language model produce a more informed response. In an authorized RAG system, that enrichment is not generic or unconditional. As the diagram shows, authorization is evaluated before retrieval, not inside the prompt. Cedar's type-aware partial evaluation evaluates policy for a given principal and action and produces a policy residual, a constraint over resources. The application compiles that residual into a database-native query filter, ensuring that only authorized additional context is retrieved from the vector database. The prompt constructor then assembles the user's instruction together with this authorized additional context. The language model never decides what it is allowed to see; it operates entirely within a world that has already been shaped by authorization.
+
+**The flow:**
+
+1. A person asks a question in an application.
+2. The application (acting as PEP) evaluates authorization using Cedar.
+3. Cedar runs **partial evaluation** with an abstract resource.
+4. Cedar returns a **residual condition** over resource attributes.
+5. The application compiles that residual into a **vector DB filter**.
+6. Vector search runs with the filter applied.
+7. Only authorized chunks are assembled as context for the model.
+
+---
+
+## What this repo is (and isn't)
 
 **This repo is:**
 - A hands-on demo of policy-driven retrieval in a RAG pipeline
@@ -27,20 +45,6 @@ Authorization is enforced *before* any sensitive context is assembled.
 The goal is to make one architectural boundary concrete:
 
 > **The model never sees unauthorized data because the system never retrieves it.**
-
----
-
-## Architecture at a glance
-
-A simplified flow:
-
-1. A person asks a question in an application.
-2. The application (acting as PEP) evaluates authorization using Cedar.
-3. Cedar runs **partial evaluation** with an abstract resource.
-4. Cedar returns a **residual condition** over resource attributes.
-5. The application compiles that residual into a **vector DB filter**.
-6. Vector search runs with the filter applied.
-7. Only authorized chunks are assembled as context for the model.
 
 ---
 
@@ -171,7 +175,38 @@ For detailed explanations, see the steps below.
 
 ---
 
-## Step 1: Inspect the policy model
+## Interactive Demo Notebook
+
+For a guided, interactive walkthrough of the entire demo, use the Jupyter notebook:
+
+```bash
+# Install Jupyter if you haven't already
+pip install jupyter
+
+# Launch Jupyter
+jupyter notebook demo.ipynb
+```
+
+The notebook (`demo.ipynb`) provides:
+
+- **Step-by-step walkthrough** of the authorization flow
+- **Interactive execution** of TPE and compilation steps
+- **Visual comparisons** of different principals (Kate, Alice, Mallory)
+- **Explanations** of residual policies and OpenSearch filters
+- **Complete flow diagram** showing how authorization-scoped retrieval works
+
+The notebook covers:
+1. Understanding the policy model (schema, policies, entities)
+2. Running type-aware partial evaluation for different principals
+3. Compiling residuals to OpenSearch filters
+4. Comparing authorization scopes across principals
+5. Understanding the complete RAG authorization flow
+
+This is the recommended way to explore the demo interactively.
+
+---
+
+## Inspect the policy model
 
 Start by reviewing:
 
@@ -184,9 +219,32 @@ The policies model a multi-tenant collaboration platform where access depends on
 - team-based sharing
 - document classification
 
+### About Chunks and Resource Naming
+
+**Note:** The `cedar/entities.json` file includes chunk entities (e.g., `"q3-plan#1"`, `"hr-note#1"`) for demo/testing purposes. In a production RAG system, chunk entities are not required for TPE—only principal entities are needed. Chunk data is stored in the vector database with metadata fields that match the resource attributes referenced in policies.
+
+In this demo, documents are split into **chunks** for vector search. Chunk identifiers follow the pattern `{document-id}#{chunk-number}`:
+
+- `q3-plan#1` = chunk #1 of the "q3-plan" document
+- `hr-note#1` = chunk #1 of the "hr-note" document
+- If a document had multiple chunks, you'd see: `q3-plan#1`, `q3-plan#2`, `q3-plan#3`, etc.
+
+**Important notes:**
+
+- **Policies don't reference specific chunks** - they reference resource attributes (like `resource.tenant`, `resource.customer_readers_team`). This allows policies to work with any chunk without hardcoding IDs.
+
+- **For TPE, chunk entities aren't required** - Type-aware partial evaluation only needs:
+  - Principal entities (to know their attributes like `tenant`, `teams`)
+  - The schema (to understand resource type structure)
+  - Chunk entities in `entities.json` are included for demo/testing purposes only
+
+- **In production**, chunks are stored in the vector database with metadata fields that match the attributes referenced in policies. The authorization filter derived from TPE is applied at query time to ensure only authorized chunks are retrieved.
+
+**Note about `cedar/entities.json`:** This file includes chunk entities (e.g., `"q3-plan#1"`, `"hr-note#1"`) for demo/testing purposes. In a production RAG system, you would only need principal entities in `entities.json` for TPE. Chunk data lives in your vector database with metadata fields that correspond to the resource attributes referenced in policies (tenant, classification, customer_readers_team, employee_readers_team, etc.).
+
 ---
 
-## Step 2: Run partial evaluation (emit a residual)
+## Running partial evaluation (emit a residual)
 
 Example (illustrative command):
 
@@ -207,13 +265,13 @@ This runs Cedar with:
 The output is a residual policy describing what must be true about a Chunk
 for access to be permitted.
 
-## Step 3: Compile the residual into a retrieval filter
+# Compile the residual into a retrieval filter
 This step is *application logic,* not Cedar logic.
 
 Cedar does not generate database queries.
 It tells you which attributes and relationships still matter.
 
-## Step 4 (optional): Index and query OpenSearch Serverless
+## Index and query OpenSearch Serverless (optional)
 
 This repo can optionally demonstrate enforcement using a real vector database.
 

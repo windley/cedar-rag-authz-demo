@@ -301,7 +301,9 @@ async function main() {
         size: 10,
         query: {
           bool: {
-            filter: filter.bool,
+            // The filter should be an array containing the bool query
+            // This structure is correct for OpenSearch
+            filter: [filter.bool],
             // k-NN query would be added separately in the actual search
             // This is just the filter portion
           }

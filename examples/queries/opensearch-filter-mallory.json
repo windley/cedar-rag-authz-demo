@@ -4,12 +4,12 @@
       "must": [
         {
           "term": {
-            "tenant_id": "otherco"
+            "customer_readers_team_id": "otherco-readers"
           }
         },
         {
           "term": {
-            "customer_readers_team_id": "otherco-readers"
+            "tenant_id": "otherco"
           }
         }
       ],
@@ -26,32 +26,34 @@
     "size": 10,
     "query": {
       "bool": {
-        "filter": {
-          "must": [
-            {
-              "term": {
-                "tenant_id": "otherco"
+        "filter": [
+          {
+            "must": [
+              {
+                "term": {
+                  "customer_readers_team_id": "otherco-readers"
+                }
+              },
+              {
+                "term": {
+                  "tenant_id": "otherco"
+                }
               }
-            },
-            {
-              "term": {
-                "customer_readers_team_id": "otherco-readers"
+            ],
+            "must_not": [
+              {
+                "term": {
+                  "classification": "confidential"
+                }
               }
-            }
-          ],
-          "must_not": [
-            {
-              "term": {
-                "classification": "confidential"
-              }
-            }
-          ]
-        }
+            ]
+          }
+        ]
       }
     }
   },
   "metadata": {
     "compiled_from": "out/residual-mallory.json",
-    "compiled_at": "2026-01-07T00:33:45.833Z"
+    "compiled_at": "2026-01-07T18:00:09.108Z"
   }
 }
