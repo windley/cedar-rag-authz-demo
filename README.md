@@ -59,7 +59,6 @@ The goal is to make one architectural boundary concrete:
 - `src/lib/` — shared utilities for Cedar and OpenSearch
 - `examples/` — sample requests, residuals, and queries
 - `infra/` — optional AWS OpenSearch Serverless setup
-- `ai/` — Cursor prompts and AI-assisted workflows
 
 ---
 
