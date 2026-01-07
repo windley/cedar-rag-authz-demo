@@ -63,8 +63,53 @@ A simplified flow:
 
 - Node.js 18+
 - npm or pnpm
-- Cedar CLI or JS evaluator available locally
+- **Cedar CLI** with experimental TPE feature enabled (see below)
 - Optional: AWS account for OpenSearch Serverless
+
+### Cedar CLI Setup
+
+This demo uses the Cedar CLI for type-aware partial evaluation (TPE), which is currently an **experimental feature**. You'll need to build the Cedar CLI from source with the experimental feature enabled.
+
+**Option 1: Build from source (recommended)**
+
+1. **Install Rust and Cargo** (if not already installed):
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
+
+2. **Install protobuf compiler** (required for building Cedar):
+   ```bash
+   # macOS
+   brew install protobuf
+   
+   # Linux (Ubuntu/Debian)
+   sudo apt-get install protobuf-compiler
+   ```
+
+3. **Clone and build Cedar CLI with TPE feature:**
+   ```bash
+   git clone https://github.com/cedar-policy/cedar.git
+   cd cedar
+   cargo build --release --bin cedar --features tpe
+   ```
+
+4. **Add to PATH** (or use full path):
+   ```bash
+   # Add to ~/.zshrc or ~/.bashrc
+   export PATH="$PATH:$(pwd)/target/release"
+   ```
+
+5. **Verify installation:**
+   ```bash
+   cedar --version
+   cedar tpe --help  # Should show TPE command help
+   ```
+
+**Option 2: Use pre-built binaries (if available)**
+
+If the Cedar project provides pre-built binaries with TPE enabled, you can use those instead. Check the [Cedar releases page](https://github.com/cedar-policy/cedar/releases) for availability.
+
+**Note:** The TPE feature must be enabled at compile time. If you see an error like `option 'tpe' is experimental, but this executable was not built with 'partial-eval' experimental feature enabled`, you need to rebuild with `--features tpe` as shown above.
 
 ---
 
@@ -72,7 +117,16 @@ A simplified flow:
 
 Get up and running in minutes:
 
-1. **Clone and install dependencies:**
+1. **Set up Cedar CLI** (see Prerequisites section above for detailed instructions):
+   ```bash
+   # Build Cedar CLI with TPE experimental feature
+   git clone https://github.com/cedar-policy/cedar.git
+   cd cedar
+   cargo build --release --bin cedar --features tpe
+   export PATH="$PATH:$(pwd)/target/release"
+   ```
+
+2. **Clone and install dependencies:**
    ```bash
    git clone https://github.com/windley/cedar-rag-authz-demo.git
    cd cedar-rag-authz-demo
@@ -187,7 +241,7 @@ The residual-to-filter translation is explicit so it can be audited, tested, and
 Current focus:
 - ✅ Policy model for a multi-tenant collaboration platform
 - ✅ Sample requests and expected access outcomes
-- ⏳ Cedar TPE invocation via Node
-- ⏳ Residual → OpenSearch filter compilation
+- ✅ Cedar TPE invocation via Node (using Cedar CLI with experimental features)
+- ✅ Residual → OpenSearch filter compilation
 - ⏳ OpenSearch Serverless ingest + filtered retrieval
-- ⏳ End-to-end “authorized context” output
+- ⏳ End-to-end "authorized context" output
