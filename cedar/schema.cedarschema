@@ -21,8 +21,9 @@ namespace Platform {
     tenant: Tenant,
 
     // Reader teams may be null when a document is not shared with that category.
-    employee_readers_team: Team?,
-    customer_readers_team: Team?,
+    // Note: Cedar doesn't support optional types directly, so these are always present but may be null
+    employee_readers_team: Team,
+    customer_readers_team: Team,
 
     // Simple sensitivity signal for the demo.
     classification: String,
@@ -36,17 +37,13 @@ namespace Platform {
     classification: String,
 
     // Flattened sharing attributes for easier pushdown filtering.
-    employee_readers_team: Team?,
-    customer_readers_team: Team?,
+    // Note: Cedar doesn't support optional types directly, so these are always present but may be null
+    employee_readers_team: Team,
+    customer_readers_team: Team,
   };
 
   // Actions used by the demo.
-  entity Action {
-    // RAG retrieval / question answering.
-    // Think: "use this chunk as context".
-    ask: Action,
-
-    // Traditional view action (kept for clarity in examples).
-    view: Action,
-  };
+  // In Cedar, actions are defined as a separate action entity type
+  action ask;
+  action view;
 }

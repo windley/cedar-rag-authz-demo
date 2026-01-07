@@ -1,3 +1,4 @@
+@id("tenant-scope")
 permit(
   principal,
   action,

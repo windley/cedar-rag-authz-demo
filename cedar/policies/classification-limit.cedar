@@ -1,3 +1,4 @@
+@id("classification-limit")
 forbid(
   principal is Platform::Customer,
   action in [Platform::Action::"view", Platform::Action::"ask"],

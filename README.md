@@ -91,7 +91,7 @@ Get up and running in minutes:
    # Generate a residual policy for customer "kate"
    node src/tpe/partial-eval.js \
      --principal 'Platform::Customer::"kate"' \
-     --action 'Platform::Action::"ask"' \
+     --action 'Platform::Action::"view"' \
      --resource-type Platform::Chunk \
      --out out/residual-kate.json
    ```
