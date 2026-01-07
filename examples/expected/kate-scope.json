@@ -1,6 +1,6 @@
 {
   "principal": "Platform::Customer::\"kate\"",
-  "action": "Platform::Action::\"ask\"",
+  "action": "Platform::Action::\"view\"",
   "authorized_resources": [
     {
       "id": "q3-plan#1",

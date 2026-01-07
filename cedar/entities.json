@@ -1,77 +1,79 @@
 [
-    {"uid": {"__entity": "Platform::Tenant", "id": "custco"}},
-    {"uid": {"__entity": "Platform::Tenant", "id": "otherco"}},
+    {"uid": {"type": "Platform::Tenant", "id": "custco"}, "attrs": {}, "parents": []},
+    {"uid": {"type": "Platform::Tenant", "id": "otherco"}, "attrs": {}, "parents": []},
   
-    {"uid": {"__entity": "Platform::Team", "id": "custco-readers"},
-     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "custco"}}},
-    {"uid": {"__entity": "Platform::Team", "id": "custco-employees"},
-     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "custco"}}},
-    {"uid": {"__entity": "Platform::Team", "id": "otherco-readers"},
-     "attrs": {"tenant": {"__entity": "Platform::Tenant", "id": "otherco"}}},
+    {"uid": {"type": "Platform::Team", "id": "custco-readers"},
+     "attrs": {"tenant": {"type": "Platform::Tenant", "id": "custco"}}, "parents": []},
+    {"uid": {"type": "Platform::Team", "id": "custco-employees"},
+     "attrs": {"tenant": {"type": "Platform::Tenant", "id": "custco"}}, "parents": []},
+    {"uid": {"type": "Platform::Team", "id": "otherco-readers"},
+     "attrs": {"tenant": {"type": "Platform::Tenant", "id": "otherco"}}, "parents": []},
+    {"uid": {"type": "Platform::Team", "id": "none"},
+     "attrs": {"tenant": {"type": "Platform::Tenant", "id": "custco"}}, "parents": []},
   
-    {"uid": {"__entity": "Platform::Customer", "id": "kate"},
+    {"uid": {"type": "Platform::Customer", "id": "kate"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
        "teams": [
-         {"__entity": "Platform::Team", "id": "custco-readers"}
+         {"type": "Platform::Team", "id": "custco-readers"}
        ]
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Customer", "id": "jack"},
+    {"uid": {"type": "Platform::Customer", "id": "jack"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
        "teams": [
-         {"__entity": "Platform::Team", "id": "custco-readers"}
+         {"type": "Platform::Team", "id": "custco-readers"}
        ]
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Employee", "id": "alice"},
+    {"uid": {"type": "Platform::Employee", "id": "alice"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
        "teams": [
-         {"__entity": "Platform::Team", "id": "custco-employees"}
+         {"type": "Platform::Team", "id": "custco-employees"}
        ]
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Customer", "id": "mallory"},
+    {"uid": {"type": "Platform::Customer", "id": "mallory"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "otherco"},
+       "tenant": {"type": "Platform::Tenant", "id": "otherco"},
        "teams": [
-         {"__entity": "Platform::Team", "id": "otherco-readers"}
+         {"type": "Platform::Team", "id": "otherco-readers"}
        ]
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Document", "id": "q3-plan"},
+    {"uid": {"type": "Platform::Document", "id": "q3-plan"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
-       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
-       "customer_readers_team": {"__entity": "Platform::Team", "id": "custco-readers"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
+       "employee_readers_team": {"type": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"type": "Platform::Team", "id": "custco-readers"},
        "classification": "internal"
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Document", "id": "hr-note"},
+    {"uid": {"type": "Platform::Document", "id": "hr-note"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
-       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
-       "customer_readers_team": null,
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
+       "employee_readers_team": {"type": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"type": "Platform::Team", "id": "none"},
        "classification": "confidential"
-     }},
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Chunk", "id": "q3-plan#1"},
+    {"uid": {"type": "Platform::Chunk", "id": "q3-plan#1"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
-       "doc": {"__entity": "Platform::Document", "id": "q3-plan"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
+       "doc": {"type": "Platform::Document", "id": "q3-plan"},
        "classification": "internal",
-       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
-       "customer_readers_team": {"__entity": "Platform::Team", "id": "custco-readers"}
-     }},
+       "employee_readers_team": {"type": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"type": "Platform::Team", "id": "custco-readers"}
+     }, "parents": []},
   
-    {"uid": {"__entity": "Platform::Chunk", "id": "hr-note#1"},
+    {"uid": {"type": "Platform::Chunk", "id": "hr-note#1"},
      "attrs": {
-       "tenant": {"__entity": "Platform::Tenant", "id": "custco"},
-       "doc": {"__entity": "Platform::Document", "id": "hr-note"},
+       "tenant": {"type": "Platform::Tenant", "id": "custco"},
+       "doc": {"type": "Platform::Document", "id": "hr-note"},
        "classification": "confidential",
-       "employee_readers_team": {"__entity": "Platform::Team", "id": "custco-employees"},
-       "customer_readers_team": null
-     }}
+       "employee_readers_team": {"type": "Platform::Team", "id": "custco-employees"},
+       "customer_readers_team": {"type": "Platform::Team", "id": "none"}
+     }, "parents": []}
   ]

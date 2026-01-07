@@ -43,7 +43,14 @@ namespace Platform {
   };
 
   // Actions used by the demo.
-  // In Cedar, actions are defined as a separate action entity type
-  action ask;
-  action view;
+  // Actions must specify which principals can use them via appliesTo
+  action ask appliesTo {
+    principal: [Employee, Customer],
+    resource: [Chunk],
+  };
+  
+  action view appliesTo {
+    principal: [Employee, Customer],
+    resource: [Chunk],
+  };
 }

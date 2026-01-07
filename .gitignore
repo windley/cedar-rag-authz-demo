@@ -61,6 +61,7 @@ terraform.tfvars
 
 # Output directories
 out/
+.tmp/
 *.log
 
 # OS
