@@ -115,7 +115,23 @@ function compileToOpenSearchFilter(residual) {
 
   if (residual && typeof residual === 'object') {
     // Handle different residual formats
-    if (residual.policies) {
+    if (residual.residuals && Array.isArray(residual.residuals)) {
+      // Cedar CLI TPE format: { residuals: [{ id, text, type }, ...] }
+      // Extract the 'text' field from each residual (contains Cedar policy syntax)
+      for (const res of residual.residuals) {
+        if (res.text) {
+          // Extract the 'when' clause from the policy text
+          const whenMatch = res.text.match(/when\s*\{([^}]+)\}/s);
+          if (whenMatch) {
+            conditions.push({
+              text: whenMatch[1].trim(),
+              type: res.type, // 'permit' or 'forbid'
+              id: res.id
+            });
+          }
+        }
+      }
+    } else if (residual.policies) {
       // PolicySet format
       conditions = extractConditionsFromPolicySet(residual);
     } else if (residual.conditions || residual.expr) {
@@ -195,14 +211,38 @@ function buildOpenSearchFilter(conditions) {
   // Use the mapping module to compile each condition
   for (const condition of conditions) {
     try {
-      const compiled = compileResidual(condition);
+      // Handle condition objects with 'text' field (from Cedar CLI residuals)
+      let conditionToCompile = condition;
+      const conditionType = condition && typeof condition === 'object' ? condition.type : null;
       
-      if (compiled.must) {
-        must.push(...(Array.isArray(compiled.must) ? compiled.must : [compiled.must]));
+      if (condition && typeof condition === 'object' && condition.text) {
+        // Extract the text, pass text to compiler
+        conditionToCompile = condition.text;
       }
-      if (compiled.must_not) {
-        mustNot.push(...(Array.isArray(compiled.must_not) ? compiled.must_not : [compiled.must_not]));
+      
+      const compiled = compileResidual(conditionToCompile);
+      
+      // If condition has type 'forbid', add to must_not instead of must
+      if (conditionType === 'forbid') {
+        // For forbid policies, the condition should NOT be true
+        // So if it compiles to must clauses, we add them to must_not
+        if (compiled.must && compiled.must.length > 0) {
+          mustNot.push(...(Array.isArray(compiled.must) ? compiled.must : [compiled.must]));
+        }
+        // Also add any existing must_not clauses
+        if (compiled.must_not && compiled.must_not.length > 0) {
+          mustNot.push(...(Array.isArray(compiled.must_not) ? compiled.must_not : [compiled.must_not]));
+        }
+      } else {
+        // For permit policies, add to must
+        if (compiled.must) {
+          must.push(...(Array.isArray(compiled.must) ? compiled.must : [compiled.must]));
+        }
+        if (compiled.must_not) {
+          mustNot.push(...(Array.isArray(compiled.must_not) ? compiled.must_not : [compiled.must_not]));
+        }
       }
+      
       if (compiled.should) {
         should.push(...(Array.isArray(compiled.should) ? compiled.should : [compiled.should]));
       }

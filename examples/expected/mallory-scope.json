@@ -1,0 +1,12 @@
+{
+  "principal": "Platform::Customer::\"mallory\"",
+  "action": "Platform::Action::\"view\"",
+  "authorized_resources": [],
+  "filter_conditions": {
+    "tenant": "otherco",
+    "customer_readers_team": "otherco-readers",
+    "classification": "not confidential"
+  },
+  "description": "Mallory (customer in otherco tenant) can only access chunks in the otherco tenant that are shared with otherco-readers team and are not confidential. Since all chunks in the demo are in custco tenant, Mallory has no access."
+}
+

@@ -9,14 +9,7 @@
         },
         {
           "term": {
-            "customer_readers_team_id": "custco-readers"
-          }
-        }
-      ],
-      "must_not": [
-        {
-          "term": {
-            "classification": "confidential"
+            "employee_readers_team_id": "custco-employees"
           }
         }
       ]
@@ -35,14 +28,7 @@
             },
             {
               "term": {
-                "customer_readers_team_id": "custco-readers"
-              }
-            }
-          ],
-          "must_not": [
-            {
-              "term": {
-                "classification": "confidential"
+                "employee_readers_team_id": "custco-employees"
               }
             }
           ]
@@ -51,7 +37,7 @@
     }
   },
   "metadata": {
-    "compiled_from": "out/residual-kate.json",
-    "compiled_at": "2026-01-07T00:28:41.181Z"
+    "compiled_from": "out/residual-alice.json",
+    "compiled_at": "2026-01-07T00:31:21.433Z"
   }
 }

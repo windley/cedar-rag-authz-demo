@@ -1,0 +1,9 @@
+{
+  "principal": "Platform::Customer::\"mallory\"",
+  "action": "Platform::Action::\"view\"",
+  "resource": "Platform::Chunk::\"q3-plan#1\"",
+  "context": {
+    "tenant": "otherco"
+  }
+}
+

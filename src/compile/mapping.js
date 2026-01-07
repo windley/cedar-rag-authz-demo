@@ -257,16 +257,56 @@ function mapAttributeToField(attrPath) {
 
 /**
  * Parse Cedar expression text (simplified parser)
+ * Handles Cedar CLI TPE output format
  */
 function parseCedarExpression(exprText, result) {
-  // This is a simplified parser - a full implementation would need proper AST parsing
+  // Handle boolean literals
+  if (exprText.trim() === 'false') {
+    // A policy that evaluates to false doesn't contribute to the filter
+    // (it's already been evaluated away)
+    return result;
+  }
   
-  // Pattern: resource.attr == value
-  const equalityMatch = exprText.match(/resource\.(\w+)\s*==\s*"([^"]+)"/);
-  if (equalityMatch) {
-    const field = mapAttributeToField(`resource.${equalityMatch[1]}`);
-    const value = equalityMatch[2];
+  // Pattern: entity reference == (resource.attr) or (resource.attr) == entity reference
+  // e.g., Platform::Tenant::"custco" == (resource.tenant)
+  const entityEqMatch = exprText.match(/(?:Platform::\w+::"([^"]+)"|\(resource\.(\w+)\))\s*==\s*(?:Platform::\w+::"([^"]+)"|\(resource\.(\w+)\))/);
+  if (entityEqMatch) {
+    const entityId = entityEqMatch[1] || entityEqMatch[3];
+    const attrName = entityEqMatch[2] || entityEqMatch[4];
+    if (entityId && attrName) {
+      const field = mapAttributeToField(`resource.${attrName}`);
+      result.must.push({ term: { [field]: entityId } });
+      return result;
+    }
+  }
+  
+  // Pattern: resource.attr == entity reference (with or without parentheses)
+  // e.g., (resource.tenant) == Platform::Tenant::"custco"
+  const resourceEntityEqMatch = exprText.match(/\(?resource\.(\w+)\)?\s*==\s*Platform::\w+::"([^"]+)"/);
+  if (resourceEntityEqMatch) {
+    const field = mapAttributeToField(`resource.${resourceEntityEqMatch[1]}`);
+    const entityId = resourceEntityEqMatch[2];
+    result.must.push({ term: { [field]: entityId } });
+    return result;
+  }
+  
+  // Pattern: resource.attr == "string value" (with or without parentheses)
+  // e.g., (resource.classification) == "confidential"
+  const stringEqMatch = exprText.match(/\(?resource\.(\w+)\)?\s*==\s*"([^"]+)"/);
+  if (stringEqMatch) {
+    const field = mapAttributeToField(`resource.${stringEqMatch[1]}`);
+    const value = stringEqMatch[2];
     result.must.push({ term: { [field]: value } });
+    return result;
+  }
+  
+  // Pattern: [Entity::"id"].contains(resource.attr)
+  // e.g., [Platform::Team::"custco-readers"].contains(resource.customer_readers_team)
+  const setContainsMatch = exprText.match(/\[Platform::\w+::"([^"]+)"\]\.contains\(resource\.(\w+)\)/);
+  if (setContainsMatch) {
+    const entityId = setContainsMatch[1];
+    const field = mapAttributeToField(`resource.${setContainsMatch[2]}`);
+    result.must.push({ term: { [field]: entityId } });
     return result;
   }
   
@@ -286,13 +326,11 @@ function parseCedarExpression(exprText, result) {
     return result;
   }
   
-  // Pattern: principal.teams.contains(resource.team)
-  const containsMatch = exprText.match(/principal\.(\w+)\.contains\(resource\.(\w+)\)/);
-  if (containsMatch) {
+  // Pattern: principal.teams.contains(resource.team) - needs principal context
+  const principalContainsMatch = exprText.match(/principal\.(\w+)\.contains\(resource\.(\w+)\)/);
+  if (principalContainsMatch) {
+    const field = mapAttributeToField(`resource.${principalContainsMatch[2]}`);
     // This would need principal context to resolve - simplified for now
-    const field = mapAttributeToField(`resource.${containsMatch[2]}`);
-    // In practice, we'd need to know the principal's teams from context
-    // For now, return a placeholder
     console.warn('Contains expression needs principal context:', exprText);
   }
   
