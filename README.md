@@ -241,6 +241,8 @@ In this demo, documents are split into **chunks** for vector search. Chunk ident
 
 **Note about `cedar/entities.json`:** This file includes chunk entities (e.g., `"q3-plan#1"`, `"hr-note#1"`) for demo/testing purposes. In a production RAG system, you would only need principal entities in `entities.json` for TPE. Chunk data lives in your vector database with metadata fields that correspond to the resource attributes referenced in policies (tenant, classification, customer_readers_team, employee_readers_team, etc.).
 
+**Note on mapping residuals to OpenSearch filters:** the mapping from the policy residuals to an OpenSearch filter is for demonstration purposes. I have not done much testing on the filters to ensure the mapping is correct. 
+
 ---
 
 ## Running partial evaluation (emit a residual)

@@ -160,3 +160,4 @@ const filterFile = args[0];
 const success = validateOpenSearchFilter(filterFile);
 process.exit(success ? 0 : 1);
 
+

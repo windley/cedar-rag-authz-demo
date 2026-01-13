@@ -1,3 +1,4 @@
 {"id": "q3-plan#1", "doc_id": "q3-plan", "tenant_id": "custco", "classification": "internal", "text": "# Q3 Planning Document\n\n## Overview\nThis document outlines the strategic plan for Q3 2024, focusing on product development and customer engagement initiatives.\n\n## Key Objectives\n1. Launch new feature set for enterprise customers\n2. Improve customer satisfaction scores by 15%\n3. Expand into two new geographic markets", "customer_readers_team_id": "custco-readers", "employee_readers_team_id": "custco-employees"}
 {"id": "hr-note#1", "doc_id": "hr-note", "tenant_id": "custco", "classification": "confidential", "text": "## HR Confidential Note\n\nThis document contains sensitive personnel information that should only be accessed by employees in the custco-employees team.", "customer_readers_team_id": null, "employee_readers_team_id": "custco-employees"}
 
+
